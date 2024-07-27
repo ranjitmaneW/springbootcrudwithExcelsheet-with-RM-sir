@@ -1,7 +1,9 @@
 package com.ex1;
-
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.io.IOException;
-import java.net.http.HttpHeaders;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -270,9 +272,64 @@ public String show1() {
         workbook.write(response.getOutputStream());
         workbook.close();
     }
-}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 
-	
+    @GetMapping("/downloadAllEmployeesPdf")
+    public void downloadAllEmployeesPdf(HttpServletResponse response) throws IOException {
+        // Retrieve all employees from the service
+        List<Emp1> allEmployees = es.allEMPdisp();
+
+        // Set the content type and attachment header
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=employees.pdf");
+
+        // Create a document
+        Document document = new Document();
+        try {
+            // Initialize PdfWriter
+            PdfWriter.getInstance(document, response.getOutputStream());
+
+            // Open the document to write
+            document.open();
+
+            // Add a title
+            document.add(new Paragraph("Employee List"));
+
+            // Add table header
+            String header = String.format("%-5s %-20s %-30s %-15s %-5s\n", "ID", "Full Name", "Email", "Mobile", "Age");
+            document.add(new Paragraph(header));
+
+            // Add employee data
+            for (Emp1 employee : allEmployees) {
+                String line = String.format("%-5d %-20s %-30s %-15s %-5d\n",
+                        employee.getId(), employee.getFullname(), employee.getSEmail(),
+                        employee.getMobi(), employee.getAge());
+                document.add(new Paragraph(line));
+            }
+
+        } catch (DocumentException e) {
+            throw new IOException("Error while creating PDF document", e);
+        } finally {
+            // Close the document
+            document.close();
+        }
+    }
+
+}
 	
 

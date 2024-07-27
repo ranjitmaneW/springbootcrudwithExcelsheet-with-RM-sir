@@ -54,6 +54,7 @@ background-color:green;
   <a href="update?id=${e.id}"> update</a>
  <a href="download?id=${e.id}"> download</a>
    <a href="downloadAllEmployees"> downloadAllEmployees</a>
+     <a href="downloadAllEmployeesPdf"> downloadAllEmployeespdf</a>
   
 </td>
 
